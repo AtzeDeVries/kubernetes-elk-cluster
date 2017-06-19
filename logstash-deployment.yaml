@@ -1,0 +1,30 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: logstash
+  labels:
+    app: logstash
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: logstash 
+      labels:
+        app: logstash 
+    spec:
+      volumes:
+      - name: certificates
+        secret:
+          secretName: logstash-certificates
+      containers:
+      - name: logstash-kubernetes
+        image: atzedevries/logstash-kubernetes:5.3.0-1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5875
+        volumeMounts:
+        - name: certificates
+          readOnly: true
+          mountPath: /logstash/cert
+
